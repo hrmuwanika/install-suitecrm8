@@ -52,10 +52,10 @@ sudo sed -i s/";date.timezone =/date.timezone = Africa\/Kigali"/g /etc/php/7.4/a
 # display_errors = Off
 # short_open_tag = Off
 
-# remove mariadb strict mode
-sudo nano /etc/mysql/mariadb.conf.d/50-server.cnf
-# paste at the bottom
-# sql_mode = "NO_ENGINE_SUBSTITUTION"
+# Remove mariadb strict mode by setting sql_mode = NO_ENGINE_SUBSTITUTION
+sudo rm /etc/mysql/mariadb.conf.d/50-server.cnf
+cd /etc/mysql/mariadb.conf.d/
+wget https://raw.githubusercontent.com/hrmuwanika/vicidial-install-scripts/main/50-server.cnf
 
 # start Apache and MariaDB service and enable them to start on boot time with the following command:
 
