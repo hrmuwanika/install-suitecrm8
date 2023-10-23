@@ -48,6 +48,9 @@ sudo sed -i s/";date.timezone =/date.timezone = Africa\/Kigali"/g /etc/php/7.4/a
 
 # file_uploads = On
 # allow_url_fopen = On
+# log_errors = Off
+# display_errors = Off
+# short_open_tag = Off
 
 # remove mariadb strict mode
 sudo nano /etc/mysql/mariadb.conf.d/50-server.cnf
@@ -84,6 +87,7 @@ exit
 MYSQL_SCRIPT
 
 # Install vTiger CRM
+cd /usr/src
 wget https://excellmedia.dl.sourceforge.net/project/vtigercrm/vtiger%20CRM%208.0.0/Core%20Product/vtigercrm8.0.0.tar.gz
 
 # Extract the downloaded file
@@ -99,13 +103,14 @@ cat <<EOF > /etc/apache2/sites-available/vtigercrm.conf
 
 <VirtualHost *:80>
      ServerAdmin admin@example.com
-     ServerName example.com
+     ServerName crm.example.com
+     ServerAlias www.crm.example.com
      DocumentRoot /var/www/html/vtigercrm/
 
      <Directory /var/www/html/vtigercrm/>
-     Options FollowSymlinks
-     AllowOverride All
-     Require all granted
+       Options FollowSymlinks
+       AllowOverride All
+       Require all granted
      </Directory>
 
      ErrorLog /var/log/apache2/vtigercrm_error.log
@@ -117,15 +122,16 @@ EOF
 # Run the following command:
 a2ensite vtigercrm
 a2dissite 000-default
+
 a2enmod rewrite
+
 systemctl restart apache2
 systemctl status apache2
 
 ufw allow 80/tcp
+ufw allow 443/tcp
 
 # Now, open your web browser and type the URL localhost on browserm. 
-
-
 # Click on the Install button. 
 # accept the vTiger public licence. 
 # verify installation prerequisites and click on the Next button.
