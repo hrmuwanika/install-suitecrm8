@@ -26,25 +26,26 @@ sudo service sshd restart
 
 # Install mariadb databases
 sudo apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc'
-sudo add-apt-repository 'deb [arch=amd64,arm64,ppc64el] https://mariadb.mirror.liquidtelecom.com/repo/10.6/ubuntu focal main'
+sudo add-apt-repository 'deb [arch=amd64,arm64,ppc64el] https://mariadb.mirror.liquidtelecom.com/repo/10.8/ubuntu focal main'
 sudo apt update
 
-# Install PHP7.4
+# Install PHP8.1
+sudo apt install ca-certificates apt-transport-https software-properties-common -y
 sudo add-apt-repository ppa:ondrej/php  -y
 sudo apt update
 
 # Install LAMP Server
-sudo apt install apache2 mariadb-server mariadb-client libapache2-mod-php7.4 php7.4 php7.4-cli php7.4-mysql php7.4-common php7.4-zip php7.4-mbstring php7.4-xmlrpc \
-php7.4-curl php7.4-soap php7.4-gd php7.4-xml php7.4-intl php7.4-ldap php7.4-imap unzip wget -y
+sudo apt install apache2 mariadb-server mariadb-client libapache2-mod-php8.1 php8.1 php8.1-cli php8.1-mysql php8.1-common php8.1-zip php8.1-mbstring php8.1-xmlrpc \
+php8.1-curl php8.1-soap php8.1-gd php8.1-xml php8.1-intl php8.1-ldap php8.1-imap unzip wget -y
 
 # After installing all the packages, open php.ini file, and make some changes, close the file, and save  it:
 
-sed -i 's/\(^memory_limit = \).*/\512M/' /etc/php/7.4/apache2/php.ini
-sed -i 's/\(^max_execution_time = \).*/\60/' /etc/php/7.4/apache2/php.ini
-sed -i 's/\(^max_input_vars = \).*/\1500/' /etc/php/7.4/apache2/php.ini
-sed -i 's/\(^post_max_size = \).*/\128M/' /etc/php/7.4/apache2/php.ini
-sed -i 's/\(^upload_max_filesize = \).*/\128M/' /etc/php/7.4/apache2/php.ini
-sudo sed -i s/";date.timezone =/date.timezone = Africa\/Kigali"/g /etc/php/7.4/apache2/php.ini
+sed -i 's/\(^memory_limit = \).*/\512M/' /etc/php/8.1/apache2/php.ini
+sed -i 's/\(^max_execution_time = \).*/\60/' /etc/php/8.1/apache2/php.ini
+sed -i 's/\(^max_input_vars = \).*/\1500/' /etc/php/8.1/apache2/php.ini
+sed -i 's/\(^post_max_size = \).*/\128M/' /etc/php/8.1/apache2/php.ini
+sed -i 's/\(^upload_max_filesize = \).*/\128M/' /etc/php/8.1/apache2/php.ini
+sudo sed -i s/";date.timezone =/date.timezone = Africa\/Kigali"/g /etc/php/8.1/apache2/php.ini
 
 # file_uploads = On
 # allow_url_fopen = On
@@ -61,11 +62,12 @@ wget https://raw.githubusercontent.com/hrmuwanika/vicidial-install-scripts/main/
 
 systemctl start apache2
 systemctl start mariadb
+
 systemctl enable apache2
 systemctl enable mariadb
 
 # By default, MariaDB is not secured. So, you will need to secure it. You can do this by running the mysql_secure_installation script:
-mysql_secure_installation
+# mysql_secure_installation
 
 # This script will change your current root password, remove anonymous users, disallow root login remotely as shown below:
 
@@ -137,4 +139,3 @@ ufw allow 443/tcp
 # verify installation prerequisites and click on the Next button.
 # Next, provide your database name, database username, password, admin username and password. Then, click on the Next button.
 # Next, select your industry and click on the Next button.
-# 
