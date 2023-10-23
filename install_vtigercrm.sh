@@ -35,22 +35,19 @@ sudo apt update
 
 # Install LAMP Server
 sudo apt install apache2 mariadb-server mariadb-client libapache2-mod-php8.1 php8.1 php8.1-cli php8.1-mysql php8.1-common php8.1-zip php8.1-mbstring php8.1-xmlrpc \
-php8.1-curl php8.1-soap php8.1-gd php8.1-xml php8.1-intl php8.1-ldap php8.1-imap unzip wget -y
+php8.1-curl php8.1-soap php8.1-gd php8.1-xml php8.1-intl php8.1-ldap php8.1-imap php8.1-opcache unzip wget -y
 
 # After installing all the packages, open php.ini file, and make some changes, close the file, and save  it:
 
-sed -i 's/\(^memory_limit = \).*/\512M/' /etc/php/8.1/apache2/php.ini
+sed -i 's/\(^memory_limit = \).*/\32M/' /etc/php/8.1/apache2/php.ini
 sed -i 's/\(^max_execution_time = \).*/\60/' /etc/php/8.1/apache2/php.ini
 sed -i 's/\(^max_input_vars = \).*/\1500/' /etc/php/8.1/apache2/php.ini
 sed -i 's/\(^post_max_size = \).*/\128M/' /etc/php/8.1/apache2/php.ini
 sed -i 's/\(^upload_max_filesize = \).*/\128M/' /etc/php/8.1/apache2/php.ini
-sudo sed -i s/";date.timezone =/date.timezone = Africa\/Kigali"/g /etc/php/8.1/apache2/php.ini
+sed -i s/";date.timezone =/date.timezone = Africa\/Kigali"/g /etc/php/8.1/apache2/php.ini
 
-# file_uploads = On
-# allow_url_fopen = On
+# display_errors = On
 # log_errors = Off
-# display_errors = Off
-# short_open_tag = Off
 
 # Remove mariadb strict mode by setting sql_mode = NO_ENGINE_SUBSTITUTION
 sudo rm /etc/mysql/mariadb.conf.d/50-server.cnf
