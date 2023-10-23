@@ -7,7 +7,6 @@
 echo -e "\n============= Update Server ================"
 sudo apt update && sudo apt -y upgrade 
 sudo apt autoremove -y
-sudo apt -y install software-properties-common
 
 #--------------------------------------------------
 # Set up the timezones
