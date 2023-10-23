@@ -39,15 +39,24 @@ php8.1-curl php8.1-soap php8.1-gd php8.1-xml php8.1-intl php8.1-ldap php8.1-imap
 
 # After installing all the packages, open php.ini file, and make some changes, close the file, and save  it:
 
-sed -i 's/\(^memory_limit = \).*/\32M/' /etc/php/8.1/apache2/php.ini
-sed -i 's/\(^max_execution_time = \).*/\60/' /etc/php/8.1/apache2/php.ini
-sed -i 's/\(^max_input_vars = \).*/\1500/' /etc/php/8.1/apache2/php.ini
+sed -i 's/\(^memory_limit = \).*/\256M/' /etc/php/8.1/apache2/php.ini
+sed -i 's/\(^max_execution_time = \).*/\120/' /etc/php/8.1/apache2/php.ini
+sed -i 's/\(^max_input_vars = \).*/\2000/' /etc/php/8.1/apache2/php.ini
 sed -i 's/\(^post_max_size = \).*/\128M/' /etc/php/8.1/apache2/php.ini
 sed -i 's/\(^upload_max_filesize = \).*/\128M/' /etc/php/8.1/apache2/php.ini
 sed -i s/";date.timezone =/date.timezone = Africa\/Kigali"/g /etc/php/8.1/apache2/php.ini
 
+# max_execution_time = 120
+# max_input_vars = 2000
+# memory_limit = 256M
+# post_max_size = 128M
+# upload_max_filesize = 128M
+# file_uploads = On
+# allow_url_fopen = On
 # display_errors = On
+# short_open_tags = Off
 # log_errors = Off
+# error_reporting = E_WARNING & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT
 
 # Remove mariadb strict mode by setting sql_mode = NO_ENGINE_SUBSTITUTION
 sudo rm /etc/mysql/mariadb.conf.d/50-server.cnf
