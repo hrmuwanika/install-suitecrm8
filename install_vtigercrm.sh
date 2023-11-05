@@ -40,7 +40,7 @@ php8.1-curl php8.1-soap php8.1-gd php8.1-xml php8.1-intl php8.1-ldap php8.1-imap
 # After installing all the packages, open php.ini file, and make some changes, close the file, and save  it:
 cd /etc/php/8.1/apache2/
 rm php.ini
-wget https://githubusercontenet/hrmuwanika
+wget https://raw.githubusercontent.com/hrmuwanika/install-vtiger-CRM/main/php.ini
 
 # max_execution_time = 120
 # max_input_vars = 2000
