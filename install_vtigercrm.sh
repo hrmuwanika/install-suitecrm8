@@ -38,13 +38,9 @@ sudo apt install apache2 mariadb-server mariadb-client libapache2-mod-php8.1 php
 php8.1-curl php8.1-soap php8.1-gd php8.1-xml php8.1-intl php8.1-ldap php8.1-imap php8.1-opcache unzip wget -y
 
 # After installing all the packages, open php.ini file, and make some changes, close the file, and save  it:
-
-sed -i 's/\(^memory_limit = \).*/\256M/' /etc/php/8.1/apache2/php.ini
-sed -i 's/\(^max_execution_time = \).*/\120/' /etc/php/8.1/apache2/php.ini
-sed -i 's/\(^max_input_vars = \).*/\2000/' /etc/php/8.1/apache2/php.ini
-sed -i 's/\(^post_max_size = \).*/\128M/' /etc/php/8.1/apache2/php.ini
-sed -i 's/\(^upload_max_filesize = \).*/\128M/' /etc/php/8.1/apache2/php.ini
-sed -i s/";date.timezone =/date.timezone = Africa\/Kigali"/g /etc/php/8.1/apache2/php.ini
+cd /etc/php/8.1/apache2/
+rm php.ini
+wget https://githubusercontenet/hrmuwanika
 
 # max_execution_time = 120
 # max_input_vars = 2000
@@ -86,9 +82,8 @@ systemctl enable mariadb
 # After that login to Mariadb Shell: 
 mysql -u root -p << MYSQL_SCRIPT
 CREATE DATABASE vtigerdb;
-CREATE USER 'vtiger'@'localhost' IDENTIFIED BY 'password';
-GRANT ALL PRIVILEGES ON vtigerdb.* TO 'vtiger'@'localhost' IDENTIFIED BY 'mypassword' WITH GRANT OPTION;
-ALTER DATABASE vtigerdb CHARACTER SET utf8 COLLATE utf8_general_ci;
+CREATE USER 'vtiger'@'localhost' IDENTIFIED BY 'm0d1fyth15';
+GRANT ALL PRIVILEGES ON vtiger.* TO 'vtiger'@'localhost';
 FLUSH PRIVILEGES;
 exit
 MYSQL_SCRIPT
