@@ -1,5 +1,5 @@
 #!/bin/sh
-# Install vtiger CRM on Ubuntu 20.04
+# Install vtiger CRM on Ubuntu 22.04
 
 #--------------------------------------------------
 # Update Server
@@ -25,7 +25,7 @@ sudo service sshd restart
 
 # Install mariadb databases
 sudo apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc'
-sudo add-apt-repository 'deb [arch=amd64,arm64,ppc64el] https://mariadb.mirror.liquidtelecom.com/repo/10.8/ubuntu focal main'
+sudo add-apt-repository 'deb [arch=amd64,arm64,ppc64el] https://mariadb.mirror.liquidtelecom.com/repo/10.11/ubuntu jammy main'
 sudo apt update
 
 # Install PHP8.1
@@ -42,8 +42,9 @@ cd /etc/php/8.1/apache2/
 rm php.ini
 wget https://raw.githubusercontent.com/hrmuwanika/install-vtiger-CRM/main/php.ini
 
-# max_execution_time = 120
-# max_input_vars = 2000
+# max_execution_time = 360
+# max_input_vars = 5000
+# max_input_time=240
 # memory_limit = 256M
 # post_max_size = 128M
 # upload_max_filesize = 128M
@@ -52,6 +53,8 @@ wget https://raw.githubusercontent.com/hrmuwanika/install-vtiger-CRM/main/php.in
 # display_errors = On
 # short_open_tags = Off
 # log_errors = Off
+# realpath_cache_size=4096K
+# realpath_cache_ttl=3600
 # error_reporting = E_WARNING & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT
 
 # Remove mariadb strict mode by setting sql_mode = NO_ENGINE_SUBSTITUTION
