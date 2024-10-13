@@ -34,101 +34,67 @@ sudo add-apt-repository ppa:ondrej/php  -y
 sudo apt update
 
 # Install LAMP Server
-sudo apt install apache2 mariadb-server mariadb-client unzip wget
+sudo apt install apache2 -y
 
+# start Apache service
+sudo systemctl enable apache2 && sudo systemctl start apache2
 
-# After installing all the packages, open php.ini file, and make some changes, close the file, and save  it:sudo apt-get install php8.1 php8.1-cli php8.1-common php8.1-imap php8.1-redis php8.1-snmp php8.1-xml php8.1-zip php8.1-mbstring php8.1-curl libapache2-mod-php php8.1-gd php8.1-intl php8.1-mysql -y
-cd /etc/php/8.1/apache2/
-rm php.ini
-wget https://raw.githubusercontent.com/hrmuwanika/install-vtiger-CRM/main/php.ini
-
-# max_execution_time = 360
-# max_input_vars = 5000
-# max_input_time=240
-# memory_limit = 256M
-# post_max_size = 128M
-# upload_max_filesize = 128M
-# file_uploads = On
-# allow_url_fopen = On
-# display_errors = On
-# short_open_tags = Off
-# log_errors = Off
-# realpath_cache_size=4096K
-# realpath_cache_ttl=3600
-# error_reporting = E_WARNING & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT
-
-# Remove mariadb strict mode by setting sql_mode = NO_ENGINE_SUBSTITUTION
-sudo rm /etc/mysql/mariadb.conf.d/50-server.cnf
-cd /etc/mysql/mariadb.conf.d/
-wget https://raw.githubusercontent.com/hrmuwanika/vicidial-install-scripts/main/50-server.cnf
-
-# start Apache and MariaDB service and enable them to start on boot time with the following command:
-
-systemctl start apache2
-systemctl start mariadb
-
-systemctl enable apache2
-systemctl enable mariadb
+sudo apt install mariadb-server -y
 
 # By default, MariaDB is not secured. So, you will need to secure it. You can do this by running the mysql_secure_installation script:
 # mysql_secure_installation
 
-# This script will change your current root password, remove anonymous users, disallow root login remotely as shown below:
+# start MariaDB service 
+sudo systemctl start mariadb && sudo systemctl enable mariadb
 
-# Enter current password for root (enter for none):
-# Set root password? [Y/n]: N
-# Remove anonymous users? [Y/n]: Y
-# Disallow root login remotely? [Y/n]: Y
-# Remove test database and access to it? [Y/n]:  Y
-# Reload privilege tables now? [Y/n]:  Y
+sudo apt install php8.1 php8.1-cli php8.1-common php8.1-imap php8.1-redis php8.1-snmp php8.1-xml php8.1-zip php8.1-mbstring php8.1-curl \
+libapache2-mod-php php8.1-gd php8.1-intl php8.1-mysql -y
 
 # After that login to Mariadb Shell: 
 mysql -u root -p << MYSQL_SCRIPT
-CREATE DATABASE vtigerdb;
-CREATE USER 'vtiger'@'localhost' IDENTIFIED BY 'm0d1fyth15';
-GRANT ALL PRIVILEGES ON vtiger.* TO 'vtiger'@'localhost';
+CREATE USER 'suitecrm'@'localhost' IDENTIFIED BY 'm0d1fyth15';
+CREATE DATABASE suitecrm;
+GRANT ALL PRIVILEGES ON suitecrm.* TO 'suitecrm'@'localhost';
 FLUSH PRIVILEGES;
-exit
+EXIT;
 MYSQL_SCRIPT
 
-# Install vTiger CRM
-cd /usr/src
-wget https://excellmedia.dl.sourceforge.net/project/vtigercrm/vtiger%20CRM%208.0.0/Core%20Product/vtigercrm8.0.0.tar.gz
+# Download SuiteCRM
+mkdir /var/www/html/suitecrm
+cd /var/www/html/suitecrm
+wget https://sourceforge.net/projects/suitecrm/files/SuiteCRM-8.6.0.zip
 
 # Extract the downloaded file
-tar -xvzf vtigercrm8.0.0.tar.gz
+sudo apt install unzip -y
+
+# Unzip and set the right permissions.
+unzip SuiteCRM-8.6.0.zip
+rm SuiteCRM-8.6.0.zip
 
 # Next, copy the extracted directory to the Apache web root and give proper permissions:
-cp -r vtigercrm /var/www/html/
-chown -R www-data:www-data /var/www/html/vtigercrm
-chmod -R 755 /var/www/html/vtigercrm
+chown -R www-data:www-data /var/www/html/suitecrm
+chmod -R 755 /var/www/html/suitecrm
 
 # Next, you will need to create an apache virtual host file for vTiger CRM. You can create it with the following command:
-cat <<EOF > /etc/apache2/sites-available/vtigercrm.conf
+cat <<EOF > /etc/apache2/sites-available/suitecrm.conf
 
 <VirtualHost *:80>
-     ServerAdmin admin@example.com
-     ServerName crm.example.com
-     ServerAlias www.crm.example.com
-     DocumentRoot /var/www/html/vtigercrm/
+ServerName yourdomain.com
+DocumentRoot /var/www/html/public
 
-     <Directory /var/www/html/vtigercrm/>
-       Options FollowSymlinks
-       AllowOverride All
-       Require all granted
-     </Directory>
+<Directory /var/www/html/>
+AllowOverride All
+</Directory>
 
-     ErrorLog /var/log/apache2/vtigercrm_error.log
-     CustomLog /var/log/apache2/vtigercrm_access.log combined
+ErrorLog ${APACHE_LOG_DIR}/error.log
+CustomLog ${APACHE_LOG_DIR}/access.log combined
+
 </VirtualHost>
-
 EOF
 
-# Run the following command:
-a2ensite vtigercrm
-a2dissite 000-default
-
-a2enmod rewrite
+# Enable the Apache configuration for SuiteCRM and rewrite the module.
+sudo a2enmod rewrite
+sudo a2ensite suitecrm.conf
 
 systemctl restart apache2
 systemctl status apache2
