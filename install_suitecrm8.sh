@@ -1,5 +1,5 @@
 #!/bin/sh
-# Install vtiger CRM on Ubuntu 22.04
+# Install SuiteCRM8 on Ubuntu 22.04
 
 #--------------------------------------------------
 # Update Server
@@ -34,10 +34,10 @@ sudo add-apt-repository ppa:ondrej/php  -y
 sudo apt update
 
 # Install LAMP Server
-sudo apt install apache2 mariadb-server mariadb-client libapache2-mod-php8.1 php8.1 php8.1-cli php8.1-mysql php8.1-common php8.1-zip php8.1-mbstring php8.1-xmlrpc \
-php8.1-curl php8.1-soap php8.1-gd php8.1-xml php8.1-intl php8.1-ldap php8.1-imap php8.1-opcache unzip wget -y
+sudo apt install apache2 mariadb-server mariadb-client unzip wget
 
-# After installing all the packages, open php.ini file, and make some changes, close the file, and save  it:
+
+# After installing all the packages, open php.ini file, and make some changes, close the file, and save  it:sudo apt-get install php8.1 php8.1-cli php8.1-common php8.1-imap php8.1-redis php8.1-snmp php8.1-xml php8.1-zip php8.1-mbstring php8.1-curl libapache2-mod-php php8.1-gd php8.1-intl php8.1-mysql -y
 cd /etc/php/8.1/apache2/
 rm php.ini
 wget https://raw.githubusercontent.com/hrmuwanika/install-vtiger-CRM/main/php.ini
