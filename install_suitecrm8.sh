@@ -86,8 +86,11 @@ sudo unzip SuiteCRM-8.7.1.zip -d /var/www/html/crm
 rm SuiteCRM-8.7.1.zip
 
 # Next, copy the extracted directory to the Apache web root and give proper permissions:
+cd /var/www/html/crm
 sudo chown -R www-data:www-data /var/www/html/crm
-sudo chmod -R 755 /var/www/html/crm
+sudo chmod -R 755 .
+sudo chmod -R 775 cache custom modules themes data upload
+sudo chmod 775 config_override.php 2>/dev/null
 
 # Next, you will need to create an apache virtual host file for vTiger CRM. You can create it with the following command:
 cat <<EOF > /etc/apache2/sites-available/suitecrm.conf
@@ -99,6 +102,7 @@ DocumentRoot /var/www/html/crm
 <Directory /var/www/html/crm>
 Options FollowSymLinks
 AllowOverride All
+Require all granted
 </Directory>
 
 ErrorLog /var/log/apache2/suitecrm-error.log
@@ -108,18 +112,13 @@ CustomLog /var/log/apache2/suitecrm-access.log common
 EOF
 
 # Enable the Apache configuration for SuiteCRM and rewrite the module.
-sudo a2enmod rewrite
 sudo a2ensite suitecrm.conf
-
-apachectl -t
-
+sudo a2enmod rewrite
 sudo systemctl restart apache2
-sudo systemctl status apache2
 
 # Configure firewall
 sudo ufw allow OpenSSH
-sudo ufw allow http
-sudo ufw allow https
+sudo ufw allow 'Apache Full'
 sudo ufw enable
 
 # Install and Configure SSL
@@ -128,6 +127,8 @@ sudo snap install core
 sudo snap refresh core
 sudo snap install --classic certbot
 sudo ln -s /snap/bin/certbot /usr/bin/certbot
+
+sudo certbot --apache -d domain.com
 
 # Now, open your web browser and type the URL localhost on browser. 
 # https://yourdomain.com/crm/public 
