@@ -56,16 +56,16 @@ libapache2-mod-php php8.1-gd php8.1-intl php8.1-mysql php8.1-gd php8.1-opcache p
 sudo nano /etc/php/8.1/apache2/php.ini
 sudo nano /etc/php/8.1/cli/php.ini
 
-date.timezone = Africa/Kigali
-post_max_size = 60M
-upload_max_filesize = 60M
-memory_limit = 256M
-max_input_time = 60
-max_execution_time = 5000
-cgi.fix_pathinfo=0
-error_reporting = E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_NOTICE & ~E_WARNING
-session.save_path = "/var/lib/php/sessions"
-opcache.enable=1
+# date.timezone = Africa/Kigali
+# post_max_size = 200M
+# upload_max_filesize = 200M
+# memory_limit = 256M
+# max_input_time = 360
+# max_execution_time = 5000
+# cgi.fix_pathinfo=0
+# error_reporting = E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_NOTICE & ~E_WARNING
+# session.save_path = "/var/lib/php/sessions"
+# opcache.enable=1
 
 sudo systemctl restart apache2
 
