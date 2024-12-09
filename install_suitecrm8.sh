@@ -87,7 +87,7 @@ rm SuiteCRM-8.7.1.zip
 
 # Next, copy the extracted directory to the Apache web root and give proper permissions:
 cd /var/www/html/crm
-sudo chown -R www-data:www-data /var/www/html/crm
+sudo chown -R www-data:www-data .
 sudo chmod -R 755 .
 sudo chmod -R 775 cache custom modules themes data upload
 sudo chmod 775 config_override.php 2>/dev/null
@@ -96,7 +96,7 @@ sudo chmod 775 config_override.php 2>/dev/null
 cat <<EOF > /etc/apache2/sites-available/suitecrm.conf
 
 <VirtualHost *:80>
-ServerName yourdomain.com
+ServerName domain.com
 DocumentRoot /var/www/html/crm
 
 <Directory /var/www/html/crm>
@@ -131,4 +131,4 @@ sudo ln -s /snap/bin/certbot /usr/bin/certbot
 sudo certbot --apache -d domain.com
 
 # Now, open your web browser and type the URL localhost on browser. 
-# https://yourdomain.com/crm/public 
+# https://yourdomain.com/crm/install.php
