@@ -1,5 +1,14 @@
 #!/bin/sh
-# Install SuiteCRM 8 on Ubuntu 22.04
+# Install SuiteCRM 8 on Ubuntu 24.04
+
+# Variable
+# Set to "True" to install certbot and have ssl enabled, "False" to use http
+ENABLE_SSL="True"
+# Set the website name
+WEBSITE_NAME="example.com"
+# Provide Email to register ssl certificate
+ADMIN_EMAIL="moodle@example.com"
+PHP_VERSION="8.3"
 
 #--------------------------------------------------
 # Update Server
@@ -28,12 +37,12 @@ sudo apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.a
 sudo add-apt-repository 'deb [arch=amd64,arm64,ppc64el] https://mariadb.mirror.liquidtelecom.com/repo/10.11/ubuntu jammy main'
 sudo apt update
 
-# Install PHP8.1
+# Install PHP8.3
 sudo apt install ca-certificates apt-transport-https software-properties-common -y
 sudo add-apt-repository ppa:ondrej/php  -y
 sudo apt update
 
-sudo apt install wget curl nano ufw software-properties-common dirmngr apt-transport-https gnupg2 ca-certificates lsb-release ubuntu-keyring unzip -y
+sudo apt install -y wget curl nano ufw software-properties-common dirmngr apt-transport-https gnupg2 ca-certificates lsb-release ubuntu-keyring unzip 
 
 # Install LAMP Server
 sudo apt install apache2 -y
@@ -41,7 +50,7 @@ sudo apt install apache2 -y
 # start Apache service
 sudo systemctl enable apache2 && sudo systemctl start apache2
 
-sudo apt install mariadb-server -y
+sudo apt install mariadb-server mariadb-client -y
 
 # By default, MariaDB is not secured. So, you will need to secure it. You can do this by running the mysql_secure_installation script:
 # sudo mariadb_secure_installation
@@ -49,23 +58,20 @@ sudo apt install mariadb-server -y
 # start MariaDB service 
 sudo systemctl start mariadb && sudo systemctl enable mariadb
 
-sudo apt install php8.1 php8.1-cli php8.1-bcmath php8.1-common php8.1-imap php8.1-redis php8.1-snmp php8.1-xml php8.1-zip php8.1-mbstring php8.1-curl \
-libapache2-mod-php php8.1-gd php8.1-intl php8.1-mysql php8.1-gd php8.1-opcache php8.1-soap php8.1-ldap php-imagick php8.1-json php8.1-bz2 php8.1-gmp -y
+sudo apt install -y php php-cli php-bcmath php-common php-imap php-redis php-snmp php-xml php-zip php-mbstring php-curl \
+libapache2-mod-php php-gd php-intl php-mysql php-gd php-opcache php-soap php-ldap php-imagick php-json php-bz2 php-gmp 
 
 # Configure PHP
-sudo nano /etc/php/8.1/apache2/php.ini
-sudo nano /etc/php/8.1/cli/php.ini
-
-# date.timezone = Africa/Kigali
-# post_max_size = 200M
-# upload_max_filesize = 200M
-# memory_limit = 256M
-# max_input_time = 360
-# max_execution_time = 5000
-# cgi.fix_pathinfo=0
-# error_reporting = E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_NOTICE & ~E_WARNING
-# session.save_path = "/var/lib/php/sessions"
-# opcache.enable=1
+echo "Configuring PHP..."
+sudo sed -i "s/.*upload_max_filesize =.*/upload_max_filesize = 200M/" /etc/php/${PHP_VERSION}/apache2/php.ini
+sudo sed -i "s/.*post_max_size =.*/post_max_size = 500M/" /etc/php/${PHP_VERSION}/apache2/php.ini
+sudo sed -i "s/^memory_limit.*/memory_limit = 256M/" /etc/php/${PHP_VERSION}/apache2/php.ini
+sudo sed -i "s/^max_input_time.*/max_input_time = 360/" /etc/php/${PHP_VERSION}/apache2/php.ini
+sudo sed -i "s/^max_execution_time.*/max_execution_time = 5000/" /etc/php/${PHP_VERSION}/apache2/php.ini
+sudo sed -i "s/^error_reporting.*/error_reporting = E_ERROR \& ~E_NOTICE \& ~E_STRICT \& ~E_DEPRECATED/" /etc/php/${PHP_VERSION}/apache2/php.ini
+sudo sed -i "s/^display_errors.*/display_errors = Off/" /etc/php/${PHP_VERSION}/apache2/php.ini
+sudo sed -i "s/^short_open_tag.*/short_open_tag = Off/" /etc/php/${PHP_VERSION}/apache2/php.ini
+sudo sed -i "s/^date.timezone=.*/date.timezone = Africa/Kigali/" /etc/php/${PHP_VERSION}/apache2/php.ini
 
 sudo systemctl restart apache2
 
@@ -96,7 +102,9 @@ sudo chmod 775 config_override.php 2>/dev/null
 cat <<EOF > /etc/apache2/sites-available/suitecrm.conf
 
 <VirtualHost *:80>
-ServerName domain.com
+ServerName $WEBSITE_NAME
+ServerAlias www.$WEBSITE_NAME
+ServerAdmin admin@$WEBSITE_NAME
 DocumentRoot /var/www/html/crm
 
 <Directory /var/www/html/crm>
@@ -121,14 +129,26 @@ sudo ufw allow OpenSSH
 sudo ufw allow 'Apache Full'
 sudo ufw enable
 
-# Install and Configure SSL
-sudo apt install snapd -y
-sudo snap install core 
-sudo snap refresh core
-sudo snap install --classic certbot
-sudo ln -s /snap/bin/certbot /usr/bin/certbot
+#--------------------------------------------------
+# Enable ssl with certbot
+#--------------------------------------------------
 
-sudo certbot --apache -d domain.com
+if [ $ENABLE_SSL = "True" ] && [ $ADMIN_EMAIL != "moodle@example.com" ]  && [ $WEBSITE_NAME != "example.com" ];then
+  sudo apt install -y snapd
+  sudo apt-get remove certbot
+  
+  sudo snap install core
+  sudo snap refresh core
+  sudo snap install --classic certbot
+  sudo ln -s /snap/bin/certbot /usr/bin/certbot
+  sudo certbot --apache -d $WEBSITE_NAME --noninteractive --agree-tos --email $ADMIN_EMAIL --redirect  
+  echo "============ SSL/HTTPS is enabled! ========================"
+else
+  echo "==== SSL/HTTPS isn't enabled due to choice of the user or because of a misconfiguration! ======"
+fi
+
+sudo systemctl restart apache2
 
 # Now, open your web browser and type the URL localhost on browser. 
-# https://yourdomain.com/crm/install.php
+echo "SuiteCRM has completed installation"
+echo "https://yourdomain.com/crm/install.php"
