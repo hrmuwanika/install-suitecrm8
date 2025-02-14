@@ -61,7 +61,7 @@ sudo systemctl start mariadb
 sudo systemctl enable mariadb
 
 sudo apt install -y php php-cli php-bcmath php-common php-imap php-redis php-snmp php-xml php-zip php-mbstring php-curl \
-libapache2-mod-php php-gd php-intl php-mysql php-gd php-opcache php-soap php-ldap php-imagick php-json php-bz2 php-gmp 
+libapache2-mod-php php-gd php-intl php-mysql php-gd php-soap php-ldap php-imagick php-json php-bz2 php-gmp 
 
 # Configure PHP
 echo "Configuring PHP..."
