@@ -13,7 +13,7 @@ PHP_VERSION="8.3"
 #--------------------------------------------------
 # Update Server
 #--------------------------------------------------
-echo -e "\n============= Update Server ================"
+echo "============= Update Server ================"
 sudo apt update -y && sudo apt upgrade -y
 sudo apt autoremove -y
 
@@ -44,34 +44,36 @@ sudo apt update
 
 sudo apt install -y wget curl nano ufw software-properties-common dirmngr apt-transport-https gnupg2 ca-certificates lsb-release ubuntu-keyring unzip 
 
-# Install LAMP Server
+# Install Apache Server
 sudo apt install apache2 -y
 
 # start Apache service
-sudo systemctl enable apache2 && sudo systemctl start apache2
+sudo systemctl enable apache2 
+sudo systemctl start apache2
 
 sudo apt install mariadb-server mariadb-client -y
 
-# By default, MariaDB is not secured. So, you will need to secure it. You can do this by running the mysql_secure_installation script:
+# Secure Mariadb database
 # sudo mariadb_secure_installation
 
 # start MariaDB service 
-sudo systemctl start mariadb && sudo systemctl enable mariadb
+sudo systemctl start mariadb 
+sudo systemctl enable mariadb
 
 sudo apt install -y php php-cli php-bcmath php-common php-imap php-redis php-snmp php-xml php-zip php-mbstring php-curl \
 libapache2-mod-php php-gd php-intl php-mysql php-gd php-opcache php-soap php-ldap php-imagick php-json php-bz2 php-gmp 
 
 # Configure PHP
 echo "Configuring PHP..."
-sudo sed -i "s/.*upload_max_filesize =.*/upload_max_filesize = 200M/" /etc/php/${PHP_VERSION}/apache2/php.ini
-sudo sed -i "s/.*post_max_size =.*/post_max_size = 500M/" /etc/php/${PHP_VERSION}/apache2/php.ini
-sudo sed -i "s/^memory_limit.*/memory_limit = 256M/" /etc/php/${PHP_VERSION}/apache2/php.ini
-sudo sed -i "s/^max_input_time.*/max_input_time = 360/" /etc/php/${PHP_VERSION}/apache2/php.ini
-sudo sed -i "s/^max_execution_time.*/max_execution_time = 5000/" /etc/php/${PHP_VERSION}/apache2/php.ini
+sudo sed -i "s/upload_max_filesize\ =\ 2M/upload_max_filesize\ =\ 200M/g" /etc/php/${PHP_VERSION}/apache2/php.ini
+sudo sed -i "s/post_max_size\ =\ 8M/post_max_size\ =\ 200M/g" /etc/php/${PHP_VERSION}/apache2/php.ini
+sudo sed -i "s/memory_limit\ =\ 128M/memory_limit\ =\ 500M/g" /etc/php/${PHP_VERSION}/apache2/php.ini
+sudo sed -i "s/max_input_time.*/max_input_time = 360/" /etc/php/${PHP_VERSION}/apache2/php.ini
+sudo sed -i "s/max_execution_time.*/max_execution_time = 5000/" /etc/php/${PHP_VERSION}/apache2/php.ini
 sudo sed -i "s/^error_reporting.*/error_reporting = E_ERROR \& ~E_NOTICE \& ~E_STRICT \& ~E_DEPRECATED/" /etc/php/${PHP_VERSION}/apache2/php.ini
-sudo sed -i "s/^display_errors.*/display_errors = Off/" /etc/php/${PHP_VERSION}/apache2/php.ini
-sudo sed -i "s/^short_open_tag.*/short_open_tag = Off/" /etc/php/${PHP_VERSION}/apache2/php.ini
-sudo sed -i "s/^date.timezone=.*/date.timezone = Africa/Kigali/" /etc/php/${PHP_VERSION}/apache2/php.ini
+sudo sed -i "s/display_errors.*/display_errors = Off/" /etc/php/${PHP_VERSION}/apache2/php.ini
+sudo sed -i "s/short_open_tag.*/short_open_tag = Off/" /etc/php/${PHP_VERSION}/apache2/php.ini
+sudo sed -i "s/\;date\.timezone\ =/date\.timezone\ =\ Africa\/Kigali/g" /etc/php/${PHP_VERSION}/apache2/php.ini
 
 sudo systemctl restart apache2
 
