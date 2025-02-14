@@ -153,4 +153,4 @@ sudo systemctl restart apache2
 
 # Now, open your web browser and type the URL localhost on browser. 
 echo "SuiteCRM has completed installation"
-echo "https://yourdomain.com/crm/install.php"
+echo "https://yourdomain.com/crm/public/install.php"
