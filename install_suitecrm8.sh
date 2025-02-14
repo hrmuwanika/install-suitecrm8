@@ -32,14 +32,12 @@ sudo sed -i 's/UsePAM yes/UsePAM no/' /etc/ssh/sshd_config
 sudo sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config
 sudo service sshd restart
 
-# Install mariadb databases
-
 # Install PHP8.3
 sudo apt install ca-certificates apt-transport-https software-properties-common -y
 sudo add-apt-repository ppa:ondrej/php  -y
 sudo apt update
 
-sudo apt install -y wget curl nano ufw software-properties-common dirmngr apt-transport-https gnupg2 ca-certificates lsb-release ubuntu-keyring unzip 
+sudo apt install -y wget curl nano software-properties-common dirmngr apt-transport-https gnupg2 ca-certificates lsb-release ubuntu-keyring unzip 
 
 # Install Apache Server
 sudo apt install apache2 -y
@@ -48,6 +46,7 @@ sudo apt install apache2 -y
 sudo systemctl enable apache2 
 sudo systemctl start apache2
 
+# Install mariadb databases
 sudo apt install mariadb-server mariadb-client -y
 
 # Secure Mariadb database
@@ -84,6 +83,7 @@ EXIT;
 MYSQL_SCRIPT
 
 # Download SuiteCRM
+echo "Installing suitecrm ..."
 cd /usr/src
 wget https://suitecrm.com/download/165/suite88/565090/suitecrm-8-8-0.zip
 
@@ -93,8 +93,8 @@ rm suitecrm-8-8-0.zip
 
 # Next, copy the extracted directory to the Apache web root and give proper permissions:
 cd /var/www/html/crm/
-sudo chown -R www-data:www-data .
-sudo chmod -R 755 .
+sudo chown -R www-data:www-data /var/www/html/crm/
+sudo chmod -R 755 /var/www/html/crm/
 #sudo chmod -R 775 cache custom modules themes data upload
 sudo chmod 775 config_override.php 2>/dev/null
 
@@ -125,9 +125,10 @@ sudo a2enmod rewrite
 sudo systemctl restart apache2
 
 # Configure firewall
+apt install -y ufw
 sudo ufw allow OpenSSH
-sudo ufw allow https
 sudo ufw allow http
+sudo ufw allow https
 sudo ufw enable -y
 
 #--------------------------------------------------
