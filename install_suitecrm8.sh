@@ -88,13 +88,13 @@ MYSQL_SCRIPT
 
 # Download SuiteCRM
 cd /usr/src
-wget https://suitecrm.com/download/148/suite87/564667/suitecrm-8-7-1.zip
+wget https://suitecrm.com/download/165/suite88/565090/suitecrm-8-8-0.zip
 mkdir /var/www/html/crm
-sudo unzip SuiteCRM-8.7.1.zip -d /var/www/html/crm
-rm SuiteCRM-8.7.1.zip
+sudo unzip SuiteCRM-8.8.0.zip -d /var/www/html/crm
+rm SuiteCRM-8.8.0.zip
 
 # Next, copy the extracted directory to the Apache web root and give proper permissions:
-cd /var/www/html/crm
+cd /var/www/html/crm/
 sudo chown -R www-data:www-data .
 sudo chmod -R 755 .
 sudo chmod -R 775 cache custom modules themes data upload
