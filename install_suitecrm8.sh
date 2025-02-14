@@ -95,7 +95,7 @@ rm suitecrm-8-8-0.zip
 cd /var/www/html/crm/
 sudo chown -R www-data:www-data .
 sudo chmod -R 755 .
-sudo chmod -R 775 cache custom modules themes data upload
+#sudo chmod -R 775 cache custom modules themes data upload
 sudo chmod 775 config_override.php 2>/dev/null
 
 # Next, you will need to create an apache virtual host file for vTiger CRM. You can create it with the following command:
@@ -126,8 +126,9 @@ sudo systemctl restart apache2
 
 # Configure firewall
 sudo ufw allow OpenSSH
-sudo ufw allow 'Apache Full'
-sudo ufw enable
+sudo ufw allow https
+sudo ufw allow http
+sudo ufw enable -y
 
 #--------------------------------------------------
 # Enable ssl with certbot
