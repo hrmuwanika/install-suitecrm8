@@ -59,17 +59,7 @@ sudo systemctl enable mariadb
 sudo apt install -y php php-cli php-bcmath php-common php-imap php-redis php-snmp php-xml php-zip php-mbstring php-curl \
 libapache2-mod-php php-gd php-intl php-mysql php-gd php-soap php-ldap php-imagick php-json php-bz2 php-gmp 
 
-# Configure PHP
-echo "Configuring PHP..."
-sudo sed -i "s/upload_max_filesize\ =\ 2M/upload_max_filesize\ =\ 200M/g" /etc/php/${PHP_VERSION}/apache2/php.ini
-sudo sed -i "s/post_max_size\ =\ 8M/post_max_size\ =\ 200M/g" /etc/php/${PHP_VERSION}/apache2/php.ini
-sudo sed -i "s/memory_limit\ =\ 128M/memory_limit\ =\ 500M/g" /etc/php/${PHP_VERSION}/apache2/php.ini
-sudo sed -i "s/max_input_time.*/max_input_time = 360/" /etc/php/${PHP_VERSION}/apache2/php.ini
-sudo sed -i "s/max_execution_time.*/max_execution_time = 5000/" /etc/php/${PHP_VERSION}/apache2/php.ini
-sudo sed -i "s/^error_reporting.*/error_reporting = E_ERROR \& ~E_NOTICE \& ~E_STRICT \& ~E_DEPRECATED/" /etc/php/${PHP_VERSION}/apache2/php.ini
-sudo sed -i "s/display_errors.*/display_errors = Off/" /etc/php/${PHP_VERSION}/apache2/php.ini
-sudo sed -i "s/short_open_tag.*/short_open_tag = Off/" /etc/php/${PHP_VERSION}/apache2/php.ini
-sudo sed -i "s/\;date\.timezone\ =/date\.timezone\ =\ Africa\/Kigali/g" /etc/php/${PHP_VERSION}/apache2/php.ini
+
 
 sudo systemctl restart apache2
 
@@ -84,19 +74,18 @@ MYSQL_SCRIPT
 
 # Download SuiteCRM
 echo "Installing suitecrm ..."
-cd /usr/src
+cd /usr/src/
 wget https://suitecrm.com/download/165/suite88/565090/suitecrm-8-8-0.zip
 
-mkdir /var/www/html/crm/
-sudo unzip suitecrm-8-8-0.zip -d /var/www/html/crm/
+sudo unzip suitecrm-8-8-0.zip -d /var/www/html/
 rm suitecrm-8-8-0.zip
 
 # Next, copy the extracted directory to the Apache web root and give proper permissions:
-cd /var/www/html/crm/
-sudo chown -R www-data:www-data /var/www/html/crm/
-sudo chmod -R 755 /var/www/html/crm/
+cd /var/www/html/
+sudo chown -R www-data:www-data /var/www/html/
+sudo chmod -R 755 /var/www/html/
 #sudo chmod -R 775 cache custom modules themes data upload
-sudo chmod 775 config_override.php 2>/dev/null
+#sudo chmod 775 config_override.php 2>/dev/null
 
 # Next, you will need to create an apache virtual host file for vTiger CRM. You can create it with the following command:
 cat <<EOF > /etc/apache2/sites-available/suitecrm.conf
@@ -105,24 +94,22 @@ cat <<EOF > /etc/apache2/sites-available/suitecrm.conf
 ServerName $WEBSITE_NAME
 ServerAlias www.$WEBSITE_NAME
 ServerAdmin admin@$WEBSITE_NAME
-DocumentRoot /var/www/html/crm/
+DocumentRoot /var/www/html/public/
 
-<Directory /var/www/html/crm/>
-Options FollowSymLinks
+<Directory /var/www/html/>
 AllowOverride All
-Require all granted
 </Directory>
 
-ErrorLog /var/log/apache2/suitecrm-error.log
-CustomLog /var/log/apache2/suitecrm-access.log common
+ErrorLog ${APACHE_LOG_DIR}/error.log
+CustomLog ${APACHE_LOG_DIR}/access.log combined
 
 </VirtualHost>
 EOF
 
 # Enable the Apache configuration for SuiteCRM and rewrite the module.
-sudo a2ensite suitecrm.conf
 sudo a2enmod rewrite
-sudo systemctl restart apache2
+sudo a2ensite suitecrm.conf
+sudo systemctl reload apache2
 
 # Configure firewall
 apt install -y ufw
@@ -153,4 +140,4 @@ sudo systemctl restart apache2
 
 # Now, open your web browser and type the URL localhost on browser. 
 echo "SuiteCRM has completed installation"
-echo "https://yourdomain.com/crm/public/install.php"
+echo "https://yourdomain.com/public/install.php"
