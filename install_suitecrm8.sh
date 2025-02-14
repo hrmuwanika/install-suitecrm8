@@ -33,9 +33,6 @@ sudo sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/
 sudo service sshd restart
 
 # Install mariadb databases
-sudo apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc'
-sudo add-apt-repository 'deb [arch=amd64,arm64,ppc64el] https://mariadb.mirror.liquidtelecom.com/repo/10.11/ubuntu jammy main'
-sudo apt update
 
 # Install PHP8.3
 sudo apt install ca-certificates apt-transport-https software-properties-common -y
@@ -107,9 +104,9 @@ cat <<EOF > /etc/apache2/sites-available/suitecrm.conf
 ServerName $WEBSITE_NAME
 ServerAlias www.$WEBSITE_NAME
 ServerAdmin admin@$WEBSITE_NAME
-DocumentRoot /var/www/html/crm
+DocumentRoot /var/www/html/crm/
 
-<Directory /var/www/html/crm>
+<Directory /var/www/html/crm/>
 Options FollowSymLinks
 AllowOverride All
 Require all granted
