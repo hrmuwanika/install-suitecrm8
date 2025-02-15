@@ -94,8 +94,8 @@ sudo unzip suitecrm-8-8-0.zip -d /var/www/html/
 rm suitecrm-8-8-0.zip
 
 # Next, copy the extracted directory to the Apache web root and give proper permissions:
-find . -type d -not -perm 2755 -exec chmod 2755 {} \;
-find . -type f -not -perm 0644 -exec chmod 0644 {} \;
+find . -type d -not -perm 2775 -exec chmod 2775 {} \;
+find . -type f -not -perm 0664 -exec chmod 0664 {} \;
 find . ! -user www-data -exec chown www-data:www-data {} \;
 chmod +x bin/console
 
@@ -109,6 +109,7 @@ ServerAdmin admin@$WEBSITE_NAME
 DocumentRoot /var/www/html/public/
 
 <Directory /var/www/html/public/>
+Options FollowSymLinks
 AllowOverride All
 </Directory>
 
