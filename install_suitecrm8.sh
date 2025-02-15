@@ -111,9 +111,8 @@ ServerAdmin admin@$WEBSITE_NAME
 DocumentRoot /var/www/html/public
 
 <Directory /var/www/html/public>
+    Options FollowSymLinks
     AllowOverride All
-    Order Allow,Deny
-    Allow from All
 </Directory>
 
 ErrorLog ${APACHE_LOG_DIR}/error.log
