@@ -31,11 +31,6 @@ sudo sed -i 's/UsePAM yes/UsePAM no/' /etc/ssh/sshd_config
 sudo sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config
 sudo service sshd restart
 
-# Install PHP8.3
-sudo apt install -y ca-certificates apt-transport-https software-properties-common 
-sudo add-apt-repository ppa:ondrej/php  -y
-sudo apt update
-
 sudo apt install -y wget curl nano dirmngr gnupg2 lsb-release ubuntu-keyring unzip 
 
 # Install Apache Server
@@ -55,8 +50,8 @@ sudo apt install mariadb-server mariadb-client -y
 sudo systemctl start mariadb 
 sudo systemctl enable mariadb
 
-sudo apt install -y php8.3 php8.3-cli php8.3-common php8.3-curl php8.3-mbstring php8.3-gd php8.3-mysql php8.3-soap php-xml php8.3-imap php8.3-intl php8.3-json \
-php8.3-zip php8.3-bcmath php8.3-redis libapache2-mod-php php8.3-ldap php8.3-tidy 
+sudo apt install -y php8.3 php8.3-cli php8.3-common php8.3-curl php8.3-mbstring php8.3-gd php8.3-mysql php8.3-soap php-xml php8.3-imap php8.3-intl php8.3-tidy \
+php8.3-zip php8.3-bcmath php8.3-redis libapache2-mod-php php8.3-ldap  
 
 # Configure PHP
 echo "Configuring PHP..."
