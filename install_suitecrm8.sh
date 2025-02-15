@@ -8,7 +8,6 @@ ENABLE_SSL="True"
 WEBSITE_NAME="example.com"
 # Provide Email to register ssl certificate
 ADMIN_EMAIL="moodle@example.com"
-PHP_VERSION="8.3"
 
 #--------------------------------------------------
 # Update Server
@@ -33,11 +32,11 @@ sudo sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/
 sudo service sshd restart
 
 # Install PHP8.3
-sudo apt install ca-certificates apt-transport-https software-properties-common -y
+sudo apt install -y ca-certificates apt-transport-https software-properties-common 
 sudo add-apt-repository ppa:ondrej/php  -y
 sudo apt update
 
-sudo apt install -y wget curl nano software-properties-common dirmngr apt-transport-https gnupg2 ca-certificates lsb-release ubuntu-keyring unzip 
+sudo apt install -y wget curl nano dirmngr gnupg2 lsb-release ubuntu-keyring unzip 
 
 # Install Apache Server
 sudo apt install apache2 -y
@@ -56,10 +55,24 @@ sudo apt install mariadb-server mariadb-client -y
 sudo systemctl start mariadb 
 sudo systemctl enable mariadb
 
-sudo apt install -y php php-cli php-bcmath php-common php-imap php-redis php-snmp php-xml php-zip php-mbstring php-curl \
-libapache2-mod-php php-gd php-intl php-mysql php-gd php-soap php-ldap php-imagick php-json php-bz2 php-gmp 
+sudo apt install -y php php-cli php-bcmath php-common php-imap php-redis php-xml php-zip php-mbstring php-curl \
+libapache2-mod-php php-gd php-intl php-mysql php-gd php-soap php-ldap php-imap php-opcache php-tidy 
 
+# Configure PHP
+echo "Configuring PHP..."
+sudo sed -i "s/upload_max_filesize\ =\ 2M/upload_max_filesize\ =\ 200M/g" /etc/php/8.3/apache2/php.ini
+sudo sed -i "s/post_max_size\ =\ 8M/post_max_size\ =\ 200M/g" /etc/php/8.3/apache2/php.ini
+sudo sed -i "s/memory_limit\ =\ 128M/memory_limit\ =\ 500M/g" /etc/php/8.3/apache2/php.ini
+sudo sed -i "s/max_input_time.*/max_input_time = 360/" /etc/php/8.3/apache2/php.ini
+sudo sed -i "s/max_execution_time.*/max_execution_time = 5000/" /etc/php/8.3/apache2/php.ini
+sudo sed -i "s/\;date\.timezone\ =/date\.timezone\ =\ Africa\/Kigali/g" /etc/php/8.3/apache2/php.ini
 
+sudo sed -i "s/upload_max_filesize\ =\ 2M/upload_max_filesize\ =\ 200M/g" /etc/php/8.3/cli/php.ini
+sudo sed -i "s/post_max_size\ =\ 8M/post_max_size\ =\ 200M/g" /etc/php/8.3/cli/php.ini
+sudo sed -i "s/memory_limit\ =\ 128M/memory_limit\ =\ 500M/g" /etc/php/8.3/cli/php.ini
+sudo sed -i "s/max_input_time.*/max_input_time = 360/" /etc/php/8.3/cli/php.ini
+sudo sed -i "s/max_execution_time.*/max_execution_time = 5000/" /etc/php/8.3/cli/php.ini
+sudo sed -i "s/\;date\.timezone\ =/date\.timezone\ =\ Africa\/Kigali/g" /etc/php/8.3/cli/php.ini
 
 sudo systemctl restart apache2
 
@@ -96,7 +109,7 @@ ServerAlias www.$WEBSITE_NAME
 ServerAdmin admin@$WEBSITE_NAME
 DocumentRoot /var/www/html/public/
 
-<Directory /var/www/html/>
+<Directory /var/www/html/public/>
 AllowOverride All
 </Directory>
 
@@ -107,8 +120,9 @@ CustomLog ${APACHE_LOG_DIR}/access.log combined
 EOF
 
 # Enable the Apache configuration for SuiteCRM and rewrite the module.
-sudo a2enmod rewrite
+sudo a2enmod rewrite ssl header
 sudo a2ensite suitecrm.conf
+sudo apachectl configtest
 sudo systemctl reload apache2
 
 # Configure firewall
