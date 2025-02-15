@@ -87,18 +87,17 @@ MYSQL_SCRIPT
 
 # Download SuiteCRM
 echo "Installing suitecrm ..."
-cd /usr/src/
+cd /var/www/html/
 wget https://suitecrm.com/download/165/suite88/565090/suitecrm-8-8-0.zip
 
 sudo unzip suitecrm-8-8-0.zip -d /var/www/html/
 rm suitecrm-8-8-0.zip
 
 # Next, copy the extracted directory to the Apache web root and give proper permissions:
-cd /var/www/html/
-sudo chown -R www-data:www-data /var/www/html/
-sudo chmod -R 755 /var/www/html/
-#sudo chmod -R 775 cache custom modules themes data upload
-#sudo chmod 775 config_override.php 2>/dev/null
+find . -type d -not -perm 2755 -exec chmod 2755 {} \;
+find . -type f -not -perm 0644 -exec chmod 0644 {} \;
+find . ! -user www-data -exec chown www-data:www-data {} \;
+chmod +x bin/console
 
 # Next, you will need to create an apache virtual host file for vTiger CRM. You can create it with the following command:
 cat <<EOF > /etc/apache2/sites-available/suitecrm.conf
