@@ -55,8 +55,8 @@ sudo apt install mariadb-server mariadb-client -y
 sudo systemctl start mariadb 
 sudo systemctl enable mariadb
 
-sudo apt install -y php php-cli php-bcmath php-common php-imap php-redis php-xml php-zip php-mbstring php-curl \
-libapache2-mod-php php-gd php-intl php-mysql php-gd php-soap php-ldap php-imap php-tidy 
+sudo apt install -y php8.3 php8.3-cli php8.3-common php8.3-curl php8.3-mbstring php8.3-gd php8.3-mysql php8.3-soap php-xml php8.3-imap php8.3-intl php8.3-json \
+php8.3-zip php8.3-bcmath php8.3-redis libapache2-mod-php php8.3-ldap php8.3-tidy 
 
 # Configure PHP
 echo "Configuring PHP..."
@@ -90,8 +90,9 @@ echo "Installing suitecrm ..."
 cd /var/www/html/
 wget https://suitecrm.com/download/165/suite88/565090/suitecrm-8-8-0.zip
 
-sudo unzip suitecrm-8-8-0.zip -d /var/www/html/
+sudo unzip suitecrm-8-8-0.zip -d /var/www/html
 rm suitecrm-8-8-0.zip
+sudo chown -R www-data:www-data /var/www/html
 
 # Next, copy the extracted directory to the Apache web root and give proper permissions:
 find . -type d -not -perm 2775 -exec chmod 2775 {} \;
@@ -111,8 +112,9 @@ ServerAdmin admin@$WEBSITE_NAME
 DocumentRoot /var/www/html/public
 
 <Directory /var/www/html/public>
-    Options FollowSymLinks
     AllowOverride All
+    Order Allow,Deny
+    Allow from All
 </Directory>
 
 ErrorLog ${APACHE_LOG_DIR}/error.log
@@ -122,7 +124,7 @@ CustomLog ${APACHE_LOG_DIR}/access.log combined
 EOF
 
 # Enable the Apache configuration for SuiteCRM and rewrite the module.
-sudo a2enmod rewrite ssl header
+#sudo a2enmod rewrite ssl header
 sudo a2ensite suitecrm.conf
 
 sudo apachectl configtest
