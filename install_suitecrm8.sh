@@ -56,7 +56,7 @@ sudo systemctl start mariadb
 sudo systemctl enable mariadb
 
 sudo apt install -y php php-cli php-bcmath php-common php-imap php-redis php-xml php-zip php-mbstring php-curl \
-libapache2-mod-php php-gd php-intl php-mysql php-gd php-soap php-ldap php-imap php-opcache php-tidy 
+libapache2-mod-php php-gd php-intl php-mysql php-gd php-soap php-ldap php-imap php-tidy 
 
 # Configure PHP
 echo "Configuring PHP..."
@@ -111,8 +111,9 @@ ServerAdmin admin@$WEBSITE_NAME
 DocumentRoot /var/www/html/public
 
 <Directory /var/www/html/public>
-Options FollowSymLinks
-AllowOverride All
+    AllowOverride All
+    Order Allow,Deny
+    Allow from All
 </Directory>
 
 ErrorLog ${APACHE_LOG_DIR}/error.log
