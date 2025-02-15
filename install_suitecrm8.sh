@@ -99,16 +99,18 @@ find . -type f -not -perm 0664 -exec chmod 0664 {} \;
 find . ! -user www-data -exec chown www-data:www-data {} \;
 chmod +x bin/console
 
-# Next, you will need to create an apache virtual host file for vTiger CRM. You can create it with the following command:
+sudo -u www-data ./bin/console suitecrm:app:install -u "alice" -p "Password" -U "suitecrmuser" -P "m0d1fyth15" -H "127.0.0.1" -N "suitecrmdb" -S "http://crm.example.com/"
+
+# Next, you will need to create an apache virtual host file for suite CRM. You can create it with the following command:
 cat <<EOF > /etc/apache2/sites-available/suitecrm.conf
 
 <VirtualHost *:80>
 ServerName $WEBSITE_NAME
 ServerAlias www.$WEBSITE_NAME
 ServerAdmin admin@$WEBSITE_NAME
-DocumentRoot /var/www/html/public/
+DocumentRoot /var/www/html/public
 
-<Directory /var/www/html/public/>
+<Directory /var/www/html/public>
 Options FollowSymLinks
 AllowOverride All
 </Directory>
@@ -122,15 +124,15 @@ EOF
 # Enable the Apache configuration for SuiteCRM and rewrite the module.
 sudo a2enmod rewrite ssl header
 sudo a2ensite suitecrm.conf
+
 sudo apachectl configtest
 sudo systemctl reload apache2
 
 # Configure firewall
 apt install -y ufw
 sudo ufw allow OpenSSH
-sudo ufw allow http
-sudo ufw allow https
-sudo ufw enable -y
+sudo ufw allow 'Apache Full'
+sudo ufw enable 
 
 #--------------------------------------------------
 # Enable ssl with certbot
