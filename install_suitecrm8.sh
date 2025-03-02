@@ -107,13 +107,13 @@ ServerAdmin admin@$WEBSITE_NAME
 DocumentRoot /var/www/html/public
 
 <Directory /var/www/html/public>
-    AllowOverride All
-    Order Allow,Deny
-    Allow from All
+    Options -Indexes +FollowSymLinks
+    AllowOverride None
+    Require all granted
 </Directory>
 
-ErrorLog ${APACHE_LOG_DIR}/error.log
-CustomLog ${APACHE_LOG_DIR}/access.log combined
+ErrorLog \${APACHE_LOG_DIR}/error.log
+CustomLog \${APACHE_LOG_DIR}/access.log combined
 
 </VirtualHost>
 EOF
