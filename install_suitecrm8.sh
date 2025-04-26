@@ -61,6 +61,9 @@ sudo sed -i "s/memory_limit\ =\ 128M/memory_limit\ =\ 500M/g" /etc/php/8.3/apach
 sudo sed -i "s/max_input_time.*/max_input_time = 360/" /etc/php/8.3/apache2/php.ini
 sudo sed -i "s/max_execution_time.*/max_execution_time = 5000/" /etc/php/8.3/apache2/php.ini
 sudo sed -i "s/\;date\.timezone\ =/date\.timezone\ =\ Africa\/Kigali/g" /etc/php/8.3/apache2/php.ini
+sudo sed -i "s/error_reporting = E_ALL \& \~E_DEPRECATED/error_reporting = E_ALL \& \~E_NOTICE \& \~E_DEPRECATED/" /etc/php/8.3/apache2/php.ini
+sudo sed -i "s/short_open_tag = Off/short_open_tag = On/" /etc/php/8.3/apache2/php.ini
+sudo sed -i "s/; max_input_vars = 1000/max_input_vars = 7000/" /etc/php/8.3/apache2/php.ini
 
 sudo sed -i "s/upload_max_filesize\ =\ 2M/upload_max_filesize\ =\ 200M/g" /etc/php/8.3/cli/php.ini
 sudo sed -i "s/post_max_size\ =\ 8M/post_max_size\ =\ 200M/g" /etc/php/8.3/cli/php.ini
@@ -68,6 +71,9 @@ sudo sed -i "s/memory_limit\ =\ 128M/memory_limit\ =\ 500M/g" /etc/php/8.3/cli/p
 sudo sed -i "s/max_input_time.*/max_input_time = 360/" /etc/php/8.3/cli/php.ini
 sudo sed -i "s/max_execution_time.*/max_execution_time = 5000/" /etc/php/8.3/cli/php.ini
 sudo sed -i "s/\;date\.timezone\ =/date\.timezone\ =\ Africa\/Kigali/g" /etc/php/8.3/cli/php.ini
+sudo sed -i "s/error_reporting = E_ALL \& \~E_DEPRECATED/error_reporting = E_ALL \& \~E_NOTICE \& \~E_DEPRECATED/" /etc/php/8.3/cli/php.ini
+sudo sed -i "s/short_open_tag = Off/short_open_tag = On/" /etc/php/8.3/cli/php.ini
+sudo sed -i "s/; max_input_vars = 1000/max_input_vars = 7000/" /etc/php/8.3/cli/php.ini
 
 sudo systemctl restart apache2
 
