@@ -50,8 +50,8 @@ sudo apt install mariadb-server mariadb-client -y
 sudo systemctl start mariadb 
 sudo systemctl enable mariadb
 
-sudo apt install -y php8.3 php8.3-cli php8.3-common php8.3-curl php8.3-mbstring php8.3-gd php8.3-mysql php8.3-soap php-xml php8.3-imap php8.3-intl php8.3-tidy \
-php8.3-zip php8.3-bcmath php8.3-redis libapache2-mod-php php8.3-ldap  
+sudo apt install -y php8.3 php8.3-cli php8.3-common php8.3-curl php8.3-mbstring php8.3-gd php8.3-mysql php8.3-soap php8.3-xml php8.3-imap php8.3-intl php8.3-tidy \
+php8.3-zip php8.3-bcmath php8.3-redis libapache2-mod-php8.3 php8.3-ldap  
 
 # Configure PHP
 echo "Configuring PHP..."
