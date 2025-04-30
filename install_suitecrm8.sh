@@ -7,7 +7,7 @@ ENABLE_SSL="True"
 # Set the website name
 WEBSITE_NAME="example.com"
 # Provide Email to register ssl certificate
-ADMIN_EMAIL="moodle@example.com"
+ADMIN_EMAIL="info@example.com"
 
 #--------------------------------------------------
 # Update Server
@@ -88,23 +88,18 @@ MYSQL_SCRIPT
 
 # Download SuiteCRM
 echo "Installing suitecrm ..."
-cd /var/www/html/
+cd /usr/src
 wget https://suitecrm.com/download/165/suite88/565090/suitecrm-8-8-0.zip
-
 sudo unzip suitecrm-8-8-0.zip -d /var/www/html
 rm suitecrm-8-8-0.zip
+
 sudo chown -R www-data:www-data /var/www/html
 
 # Next, copy the extracted directory to the Apache web root and give proper permissions:
-find . -type d -not -perm 2775 -exec chmod 2775 {} \;
-find . -type f -not -perm 0664 -exec chmod 0664 {} \;
-find . ! -user www-data -exec chown www-data:www-data {} \;
-chmod +x bin/console
-
-sudo -u www-data ./bin/console suitecrm:app:install -u "alice" -p "Password" -U "suitecrmuser" -P "m0d1fyth15" -H "127.0.0.1" -N "suitecrmdb" -S "http://crm.example.com/"
+sudo chmod -R 755 /var/www/html/
 
 # Next, you will need to create an apache virtual host file for suite CRM. You can create it with the following command:
-cat <<EOF > /etc/apache2/sites-available/suitecrm.conf
+sudo cat <<EOF > /etc/apache2/sites-available/suitecrm.conf
 
 <VirtualHost *:80>
 ServerName $WEBSITE_NAME
@@ -141,7 +136,7 @@ sudo ufw enable
 # Enable ssl with certbot
 #--------------------------------------------------
 
-if [ $ENABLE_SSL = "True" ] && [ $ADMIN_EMAIL != "moodle@example.com" ]  && [ $WEBSITE_NAME != "example.com" ];then
+if [ $ENABLE_SSL = "True" ] && [ $ADMIN_EMAIL != "info@example.com" ]  && [ $WEBSITE_NAME != "example.com" ];then
   sudo apt install -y snapd
   sudo apt-get remove certbot
   
@@ -159,4 +154,4 @@ sudo systemctl restart apache2
 
 # Now, open your web browser and type the URL localhost on browser. 
 echo "SuiteCRM has completed installation"
-echo "https://yourdomain.com/public/install.php"
+echo "https://yourdomain.com/install.php"
